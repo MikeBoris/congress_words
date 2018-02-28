@@ -84,16 +84,42 @@ def get_verb(blob):
 	verbs = Counter(verb)
 	return verbs
 
+#--- MAIN GET_WORDS ---------------------------#
 
 def get_house_words():
 	json = get_house_bills()
 	title_list = get_bill_title(json)
+	party_list = get_party_sponsor(json)
 	for i in title_list:
 		blob = get_blob(i)
 		a = get_adj(blob)
 		n = get_noun(blob)
 		v = get_verb(blob)
 		print(a, n, v)
+
+#--- PARTY STATS ------------------------------#
+
+# make sure we're pulling in party sponsor
+# counter for each party
+# 
+def get_party_sponsor(json):
+	"""
+	Given bill
+	Return str of given party ('D' or 'R')
+	"""
+	bills = json['results'][0]['bills']
+	return [bills[i]['sponsor_party'] for i in range(len(bills))]
+
+'''
+
+def get_bill_title(json):
+	"""
+	Given json return object
+	Returns list of bill titles
+	"""
+	bills = json['results'][0]['bills']
+	return [bills[i]['title'] for i in range(len(bills))]
+
 
 
 '''
