@@ -89,13 +89,24 @@ def get_verb(blob):
 def get_house_words():
 	json = get_house_bills()
 	title_list = get_bill_title(json)
-	party_list = get_party_sponsor(json)
 	for i in title_list:
 		blob = get_blob(i)
 		a = get_adj(blob)
 		n = get_noun(blob)
 		v = get_verb(blob)
 		print(a, n, v)
+
+def get_house_words(bills):
+	title_list = [bills[i]['title'] for i in range(len(bills))]
+	for i in title_list:
+		blob = get_blob(i)
+		a = get_adj(blob)
+		n = get_noun(blob)
+		v = get_verb(blob)
+		print(a, n, v)
+
+
+
 
 #--- PARTY STATS ------------------------------#
 
@@ -104,22 +115,29 @@ def get_house_words():
 # 
 def get_party_sponsor(json):
 	"""
-	Given bill
-	Return str of given party ('D' or 'R')
-	"""
+	Given json return object
+	Return list of bill sponsors ('D' or 'R')
+	"""	
 	bills = json['results'][0]['bills']
 	return [bills[i]['sponsor_party'] for i in range(len(bills))]
 
-'''
-
-def get_bill_title(json):
-	"""
-	Given json return object
-	Returns list of bill titles
-	"""
+def get_party_words(json):
+	# get bills
 	bills = json['results'][0]['bills']
-	return [bills[i]['title'] for i in range(len(bills))]
+	for i in bills:
+		if bills[i]['sponsor_party'] == 'D':
 
+
+
+get bills
+for each bill
+	get bill party
+	if party == D
+		get words
+		add words and count
+	else # party == R
+		get words
+		add words and count
 
 
 '''
