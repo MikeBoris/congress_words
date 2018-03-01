@@ -96,7 +96,7 @@ def get_house_words():
 		v = get_verb(blob)
 		print(a, n, v)
 
-def get_house_words(bills):
+def get_words_from_house_bill(bill):
 	title_list = [bills[i]['title'] for i in range(len(bills))]
 	for i in title_list:
 		blob = get_blob(i)
@@ -122,22 +122,33 @@ def get_party_sponsor(json):
 	return [bills[i]['sponsor_party'] for i in range(len(bills))]
 
 def get_party_words(json):
+	"""
+	Given json object w/ bill titles
+	Return word counters for each party
+	"""
+	# initialize counters
+	d = Counter()
+	r = Counter()
+	i = Counter()
 	# get bills
 	bills = json['results'][0]['bills']
 	for i in bills:
 		if bills[i]['sponsor_party'] == 'D':
+			# get words
+			# count
+			# update counter
+		elif bills[i]['sponsor_party'] == 'R':
+			# get words
+			# count
+			# update counter
+		else: # party == I
+			# get words
+			# count
+			# update counter
+	return d, r, i
 
 
 
-get bills
-for each bill
-	get bill party
-	if party == D
-		get words
-		add words and count
-	else # party == R
-		get words
-		add words and count
 
 
 '''
