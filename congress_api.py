@@ -123,10 +123,20 @@ def get_party_words(json):
 	Return word counters for each party
 	"""
 	# initialize counters
-	d_a = Counter()
-	d_n = Counter()
-	d_v = Counter()
-	
+	d_a = Counter() # dem - adj
+	d_n = Counter() # dem - noun
+	d_v = Counter() # demo - verb
+	r_a = Counter() # rep - adj
+	r_n = Counter() # rep - noun
+	r_v = Counter() # rep - verb
+	i_a = Counter() # ind - adj
+	i_n = Counter() # ind - noun
+	i_v = Counter() # ind - verb
+	k = Counter()
+	d_a, d_n, d_v, r_a, r_n, r_v, i_a, i_n, i_v = k, k, k, k, k, k, k, k, k
+	d = []
+	r = []
+	i = []
 	# get bills
 	bills = json['results'][0]['bills']
 	for i in range(len(bills)):
@@ -135,16 +145,21 @@ def get_party_words(json):
 			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# update counters
 			d_a, d_n, d_v = d_a + a, d_n + n, d_v + v
-
+			d.extend((d_a, d_n, d_v))
 		elif bills[i]['sponsor_party'] == 'R':
 			# get words
 			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# count
-			# update counter
+			# update counters
+			r_a, r_n, r_v = r_a + a, r_n + n, r_v + v
+			r.extend((r_a, r_n, r_v))
 		else: # party == I
 			# get words
+			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# count
 			# update counter
+			i_a, i_n, i_v = i_a + a, i_n + n, i_v + v
+			i.extend((i_a, i_n, i_v))
 	return d, r, i
 
 
