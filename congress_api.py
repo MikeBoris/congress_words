@@ -138,6 +138,7 @@ def get_party_words(json):
 
 		elif bills[i]['sponsor_party'] == 'R':
 			# get words
+			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# count
 			# update counter
 		else: # party == I
