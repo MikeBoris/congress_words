@@ -62,7 +62,7 @@ def get_adj(blob):
 	adj = [blob.tags[i][0] for i in range(len(blob.tags)) 
 	if blob.tags[i][1] == 'JJ']
 	adjs = Counter(adj)
-	return adjs.most_common(3)
+	return adjs #.most_common(3)
 
 def get_noun(blob):
 	"""
@@ -72,7 +72,7 @@ def get_noun(blob):
 	noun = [blob.tags[i][0] for i in range(len(blob.tags))
 	if blob.tags[i][1].startswith('NN')]
 	nouns = Counter(noun)
-	return nouns.most_common(3)
+	return nouns #.most_common(3)
 
 def get_verb(blob):
 	"""
@@ -97,6 +97,10 @@ def get_house_words():
 		print(a, n, v)
 
 def get_words_from_house_bill(bill_title):
+	"""
+	Given bill (str)
+	Returns 3 pos counters
+	"""
 	blob = get_blob(bill_title)
 	a = get_adj(blob)
 	n = get_noun(blob)
@@ -120,20 +124,18 @@ def get_party_sponsor(json):
 def get_party_words(json):
 	"""
 	Given json object w/ bill titles
-	Return word counters for each party
+	Return lists containing word counters for each party
 	"""
 	# initialize counters
 	d_a = Counter() # dem - adj
 	d_n = Counter() # dem - noun
-	d_v = Counter() # demo - verb
+	d_v = Counter() # dem - verb
 	r_a = Counter() # rep - adj
 	r_n = Counter() # rep - noun
 	r_v = Counter() # rep - verb
 	i_a = Counter() # ind - adj
 	i_n = Counter() # ind - noun
 	i_v = Counter() # ind - verb
-	k = Counter()
-	d_a, d_n, d_v, r_a, r_n, r_v, i_a, i_n, i_v = k, k, k, k, k, k, k, k, k
 	d = []
 	r = []
 	i = []
@@ -145,21 +147,22 @@ def get_party_words(json):
 			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# update counters
 			d_a, d_n, d_v = d_a + a, d_n + n, d_v + v
-			d.extend((d_a, d_n, d_v))
 		elif bills[i]['sponsor_party'] == 'R':
 			# get words
 			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# count
 			# update counters
 			r_a, r_n, r_v = r_a + a, r_n + n, r_v + v
-			r.extend((r_a, r_n, r_v))
 		else: # party == I
 			# get words
 			a, n, v = get_words_from_house_bill(bills[i]['title'])
 			# count
 			# update counter
 			i_a, i_n, i_v = i_a + a, i_n + n, i_v + v
-			i.extend((i_a, i_n, i_v))
+	# add counters to list
+	d.extend((d_a, d_n, d_v))
+	r.extend((r_a, r_n, r_v))
+	#i.extend((i_a, i_n, i_v))
 	return d, r, i
 
 
@@ -182,4 +185,14 @@ construct tables (df) for the top pos:
 
 if __name__ == '__main__':
 	
-	get_house_words()
+	#get_house_words()
+	json = get_house_bills()
+	d, r, i = get_party_words(json)
+	#print('Democrat words: {0}'.format(str(d)))
+	print()
+	#print('Republican words: {0}'.format(str(r)))
+	print(type(d))
+	print(len(d))
+	print('Adjectives: {}'.format(d[0]))
+	print('Nouns: {}'.format(d[1]))
+	print('Verbs: {}'.format(d[2]))
