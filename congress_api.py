@@ -8,6 +8,7 @@ type	introduced, updated, passed or major
 """
 from collections import Counter
 import json
+from pandas import DataFrame
 import requests
 from textblob import TextBlob
 from ApiKey import params
@@ -183,16 +184,55 @@ construct tables (df) for the top pos:
 
 '''
 
-if __name__ == '__main__':
-	
+# function to take list of pos counters for each party
+# return df of word, freq, pos, party
+def party_words_to_df(k, party='Dem'):
+	# k is list of counter objects
+	cols = ['Word', 'Frequency']
+	# ADJ
+	df = DataFrame(k[0].most_common(5), columns=cols)
+	df['Pos'] = ['Adj']*5
+	df.set_index('Pos')
+	df['Party'] = [party]*5
+	df.set_index('Party')
+	# NOUN
+	df1 = DataFrame(k[1].most_common(5), columns=cols)
+	df1['Pos'] = ['Noun']*5
+	df1.set_index('Pos')
+	df1['Party'] = [party]*5
+	df1.set_index('Party')
+	# VERB
+	df2 = DataFrame(k[2].most_common(5), columns=cols)
+	df2['Pos'] = ['Verb']*5
+	df2.set_index('Pos')
+	df2['Party'] = [party]*5
+	df2.set_index('Party')
+	# now we have 3 dfs
+	# df, df1, df2
+	df = df.append(df1, ignore_index=True)
+	df = df.append(df2, ignore_index=True)
+	return df
+
+def json_to_df():
 	#get_house_words()
 	json = get_house_bills()
 	d, r, i = get_party_words(json)
 	#print('Democrat words: {0}'.format(str(d)))
 	print()
 	#print('Republican words: {0}'.format(str(r)))
-	print(type(d))
-	print(len(d))
-	print('Adjectives: {}'.format(d[0]))
-	print('Nouns: {}'.format(d[1]))
-	print('Verbs: {}'.format(d[2]))
+	#print('Adjectives: {}'.format())
+	#print('Nouns: {}'.format(d[1]))
+	#print('Verbs: {}'.format(d[2]))
+	# adj counter
+	words_df = party_words_to_df(d)
+	words_df = words_df.append(party_words_to_df(r, party='Rep')) 
+	return words_df
+
+if __name__ == '__main__':
+	
+	words = json_to_df()
+	print(words.sort_values(['Frequency'], ascending=False))
+	
+	
+
+	
