@@ -25,19 +25,6 @@ def get_house_bills(key='api_key'):
 	r = requests.get(url,headers={"X-API-KEY":key})
 	return json.loads(r.content)
 
-'''
-
-def print_data(data):
-	r = json.loads(data)
-	bills = r['results'][0]['bills']
-	for i in range(len(bills)):
-		print(bills[i]['number'])
-		#print(bills[i]['introduced_date'])
-		print(bills[i]['title'])
-		print(bills[i]['sponsor_party'])
-		print("")
-'''
-
 def get_bill_title(json):
 	"""
 	Given json return object
@@ -165,9 +152,6 @@ def get_party_words(json):
 	r.extend((r_a, r_n, r_v))
 	#i.extend((i_a, i_n, i_v))
 	return d, r, i
-
-
-
 
 
 '''
